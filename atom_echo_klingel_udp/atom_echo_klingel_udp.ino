@@ -12,16 +12,18 @@
 
 #include "M5Atom.h"
 
+#define AUDIO_LENGTH 676648
 
 #include "WiFi.h"
 #include "AsyncUDP.h"
+
 //const char *ssid = "WG 2.2";
 //const char *password = "opWF6nvt6#v";
 const char *ssid = "westpfalz.freifunk.net";
 const char *pass = "";
 AsyncUDP udp;
 
-extern const unsigned char fickende_leute[676648];
+extern const unsigned char audio[AUDIO_LENGTH];
 
 #define CONFIG_I2S_BCK_PIN     19
 #define CONFIG_I2S_LRCK_PIN    33
@@ -157,7 +159,7 @@ void loop() {
     if (Spakeflag) {
         M5.dis.drawpix(0, CRGB(128, 0, 0));
 
-        i2s_write(SPEAK_I2S_NUMBER, fickende_leute, 676648, &bytes_written,
+        i2s_write(SPEAK_I2S_NUMBER, audio, AUDIO_LENGTH, &bytes_written,
                   portMAX_DELAY);
         Spakeflag = false;
     }
