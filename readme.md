@@ -1,3 +1,5 @@
+some esp32 hardware platforms are compared for minimum deep sleep current. Some Modifications to hardware are evaluated. Some wireless protocols are also compared for minimum power.
+
 
 
 useful links for playing mp3s with m5stack Atom echo
