@@ -1,4 +1,4 @@
-#ESP-basierte Funkklingel
+# ESP-basierte Funkklingel
 
 In diesem Projekt werden verschiedene ESP32-basierte Hardwareplattformen auf minimalen Deep-Sleep-Strom getestet. Einige Modifizierungen wurden an den Hardwareplattformen vorgenommen, um den Deep-Sleep-Strom weiter zu reduzieren. Desweiteren wurden verschiedene Wireless-Protokolle gestestet und auf ihren Energieverbrauch hin untersucht.
 
