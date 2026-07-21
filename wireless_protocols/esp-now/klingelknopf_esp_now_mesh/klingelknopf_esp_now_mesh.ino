@@ -93,7 +93,9 @@ void setup() {
   esp_wifi_init(&wifi_init_config);
   esp_wifi_set_mode(WIFI_MODE_STA);
   esp_wifi_start();
-  esp_wifi_set_max_tx_power(8); // Power reduction is for example and testing purposes only. Do not use in your own programs!
+  esp_wifi_set_max_tx_power(78); // Power reduction is for example and testing purposes only. Do not use in your own programs!
+  //esp_wifi_set_max_tx_power(8); // Power reduction is for example and testing purposes only. Do not use in your own programs!
+
   zh_network_init_config_t network_init_config = ZH_NETWORK_INIT_CONFIG_DEFAULT();
   zh_network_init(&network_init_config);
   #ifdef CONFIG_IDF_TARGET_ESP8266
