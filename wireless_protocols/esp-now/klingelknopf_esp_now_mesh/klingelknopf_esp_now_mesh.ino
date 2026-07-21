@@ -1,17 +1,15 @@
 
-//#define DEBUG_FLAG
+#define DEBUG_FLAG
 //#undef DEBUG_FLAG
 
 
 #include "nvs_flash.h"
 #include "esp_netif.h"
-#include "zh_network.h"
-#include "driver/rtc_io.h"
-
+#include "zh_network-main/zh_network-main/include/zh_network.h"
 #define MAC2STR(a) (a)[0], (a)[1], (a)[2], (a)[3], (a)[4], (a)[5]
 
 #define BUTTON_PIN_BITMASK(GPIO) (1ULL << GPIO)  // 2 ^ GPIO_NUMBER in hex
-#define WAKEUP_GPIO              GPIO_NUM_3     // Only RTC IO are allowed - ESP32 Pin example
+#define WAKEUP_GPIO              GPIO_NUM_5     // Only RTC IO are allowed. pushbutton is wired to this gpio via a short piece of enameled wire
 
 void zh_network_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data);
 
@@ -34,10 +32,12 @@ void handle_wakeup_reason() {
   wakeup_reason = esp_sleep_get_wakeup_cause();
 
   switch (wakeup_reason) {
-    case 7:{
+    case 2:{
       #ifdef DEBUG_FLAG
       Serial.println("Wakeup caused by external signal using RTC_CNTL");
       #endif
+      vTaskDelay(1000 / portTICK_PERIOD_MS);
+
       button_pressed = true;
       break;
     }     
@@ -59,8 +59,13 @@ void ring_bell(){
     //delay(3000);
     //vTaskDelay(30 / portTICK_PERIOD_MS);
 
-//    zh_network_send(NULL, (uint8_t *)&send_message, sizeof(send_message));  //broadcast
-    zh_network_send(target, (uint8_t *)&send_message, sizeof(send_message));
+    zh_network_send(NULL, (uint8_t *)&send_message, sizeof(send_message));  //broadcast
+    zh_network_send(NULL, (uint8_t *)&send_message, sizeof(send_message));  //broadcast
+    zh_network_send(NULL, (uint8_t *)&send_message, sizeof(send_message));  //broadcast
+    zh_network_send(NULL, (uint8_t *)&send_message, sizeof(send_message));  //broadcast
+    zh_network_send(NULL, (uint8_t *)&send_message, sizeof(send_message));  //broadcast
+
+ //   zh_network_send(target, (uint8_t *)&send_message, sizeof(send_message));
 
     vTaskDelay(30 / portTICK_PERIOD_MS);
 
@@ -115,9 +120,9 @@ void setup() {
 
   
 
-      gpio_set_pull_mode(WAKEUP_GPIO, GPIO_PULLDOWN_ONLY);
-
-      esp_deep_sleep_enable_gpio_wakeup(BUTTON_PIN_BITMASK(WAKEUP_GPIO), ESP_GPIO_WAKEUP_GPIO_HIGH);
+  esp_sleep_enable_ext0_wakeup(WAKEUP_GPIO,0); //1 = High, 0 = Low
+  gpio_pulldown_dis(WAKEUP_GPIO);  // GPIO33 is tie to GND in order to wake up in HIGH
+  gpio_pullup_dis(WAKEUP_GPIO);   // the pushbutton has a pullup resistor on the pcb
   
   //esp_sleep_enable_ext1_wakeup(BUTTON_PIN_BITMASK(WAKEUP_GPIO), ESP_EXT1_WAKEUP_ALL_LOW);
   //rtc_gpio_pulldown_dis(WAKEUP_GPIO);  // GPIO33 is tie to GND in order to wake up in HIGH
